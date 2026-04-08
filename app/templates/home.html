@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}OSRS Player Lookup{% endblock %}
+
+{% block content %}
+<h2>Player Lookup</h2>
+<form method="get" action="/">
+    <input type="text" name="player" placeholder="Enter player name" value="{{ request.args.get('player', '') }}">
+    <button type="submit">Look Up</button>
+</form>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+{% if player %}
+    <h2>{{ player.username }}</h2>
+    <p>Total Level: <strong>{{ player.total_level }}</strong> | Total XP: <strong>{{ "{:,}".format(player.total_experience) }}</strong></p>
+
+    <h3>Combat Skills</h3>
+    <table>
+        <thead>
+            <tr><th>Skill</th><th>Level</th><th>Experience</th><th>Rank</th></tr>
+        </thead>
+        <tbody>
+            {% for skill, stats in player.combat_skills.items() %}
+            <tr>
+                <td>{{ skill }}</td>
+                <td>{{ stats.level }}</td>
+                <td>{{ "{:,}".format(stats.experience) }}</td>
+                <td>{{ "{:,}".format(stats.rank) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Non-Combat Skills</h3>
+    <table>
+        <thead>
+            <tr><th>Skill</th><th>Level</th><th>Experience</th><th>Rank</th></tr>
+        </thead>
+        <tbody>
+            {% for skill, stats in player.non_combat_skills.items() %}
+            <tr>
+                <td>{{ skill }}</td>
+                <td>{{ stats.level }}</td>
+                <td>{{ "{:,}".format(stats.experience) }}</td>
+                <td>{{ "{:,}".format(stats.rank) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

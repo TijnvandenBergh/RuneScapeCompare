@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Compare Players{% endblock %}
+
+{% block content %}
+<h2>Compare Players</h2>
+<form method="get" action="/compare">
+    <input type="text" name="player1" placeholder="Player 1" value="{{ request.args.get('player1', '') }}">
+    <input type="text" name="player2" placeholder="Player 2" value="{{ request.args.get('player2', '') }}">
+    <button type="submit">Compare</button>
+</form>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+{% if player1 and player2 %}
+    <table>
+        <thead>
+            <tr>
+                <th>Skill</th>
+                <th>{{ player1.username }}</th>
+                <th>{{ player2.username }}</th>
+                <th>Difference</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for skill in player1.skills %}
+            {% if skill in player2.skills %}
+            <tr>
+                <td>{{ skill }}</td>
+                <td>{{ player1.skills[skill].level }}</td>
+                <td>{{ player2.skills[skill].level }}</td>
+                <td>{{ player1.skills[skill].level - player2.skills[skill].level }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
